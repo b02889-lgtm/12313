@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "weather": {
+      "command": "python",
+      "args": [
+        "server.py"
+      ],
+      "cwd": "c:\\Users\\v-haoguoliang\\Desktop\\新建文件夹\\weather-mcp-server",
+      "env": {}
+    }
+  }
+}

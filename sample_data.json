@@ -1,0 +1,37 @@
+[
+  {
+    "id": 1,
+    "name": "张三",
+    "age": 25,
+    "score": 85.5,
+    "department": "技术部"
+  },
+  {
+    "id": 2,
+    "name": "李四",
+    "age": 30,
+    "score": 92.0,
+    "department": "市场部"
+  },
+  {
+    "id": 3,
+    "name": "王五",
+    "age": 28,
+    "score": 78.5,
+    "department": "技术部"
+  },
+  {
+    "id": 4,
+    "name": "赵六",
+    "age": 35,
+    "score": 88.0,
+    "department": "人事部"
+  },
+  {
+    "id": 5,
+    "name": "钱七",
+    "age": 22,
+    "score": 95.5,
+    "department": "市场部"
+  }
+]

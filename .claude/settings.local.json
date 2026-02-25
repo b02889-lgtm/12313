@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Bash(copilotcode --help:*)",
+      "Bash(python -c \"\nimport math\n\n# 解方程 x^2 - 5x + 6 = 0\na, b, c = 1, -5, 6\ndiscriminant = b**2 - 4*a*c\n\nx1 = \\(-b + math.sqrt\\(discriminant\\)\\) / \\(2*a\\)\nx2 = \\(-b - math.sqrt\\(discriminant\\)\\) / \\(2*a\\)\n\nprint\\(f''方程 x² - 5x + 6 = 0 的解:''\\)\nprint\\(f''x₁ = {x1}''\\)\nprint\\(f''x₂ = {x2}''\\)\n\")",
+      "Bash(py --version)",
+      "Bash(py -c \"import sys; print\\(sys.executable\\)\")",
+      "Bash(powershell -Command \"\n$path = [Environment]::GetEnvironmentVariable\\(''Path'', ''User''\\)\n$pythonPath = ''C:\\\\Users\\\\v-haoguoliang\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python313\\\\''\n$scriptsPath = ''C:\\\\Users\\\\v-haoguoliang\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python313\\\\Scripts\\\\''\n\n# 检查是否已存在\nif \\($path -notlike \"\"*$pythonPath*\"\"\\) {\n    [Environment]::SetEnvironmentVariable\\(''Path'', $path + '';'' + $pythonPath + '';'' + $scriptsPath, ''User''\\)\n    Write-Host ''Python 已成功添加到 PATH''\n    Write-Host ''请重新打开命令行窗口或重启电脑后生效''\n} else {\n    Write-Host ''Python 已经在 PATH 中''\n}\n\")",
+      "Bash(cmd /c 'powershell -Command \"\"$path = [Environment]::GetEnvironmentVariable\\(\\\\\"\"Path\\\\\"\", \\\\\"\"User\\\\\"\"\\); $pythonPath = \\\\\"\"C:\\\\\\\\Users\\\\\\\\v-haoguoliang\\\\\\\\AppData\\\\\\\\Local\\\\\\\\Programs\\\\\\\\Python\\\\\\\\Python313\\\\\\\\\\\\\"\"; $scriptsPath = \\\\\"\"C:\\\\\\\\Users\\\\\\\\v-haoguoliang\\\\\\\\AppData\\\\\\\\Local\\\\\\\\Programs\\\\\\\\Python\\\\\\\\Python313\\\\\\\\Scripts\\\\\\\\\\\\\"\"; if \\($path -notlike \\\\\"\"*$pythonPath*\\\\\"\"\\) { [Environment]::SetEnvironmentVariable\\(\\\\\"\"Path\\\\\"\", $path + \\\\\"\";\\\\\"\" + $pythonPath + \\\\\"\";\\\\\"\" + $scriptsPath, \\\\\"\"User\\\\\"\"\\); Write-Host \\\\\"\"Python added to PATH\\\\\"\" -ForegroundColor Green; Write-Host \\\\\"\"Please restart terminal\\\\\"\" -ForegroundColor Yellow } else { Write-Host \\\\\"\"Already in PATH\\\\\"\" -ForegroundColor Cyan }\"\"')",
+      "Bash(cmd.exe //c powershell.exe -ExecutionPolicy Bypass -NoProfile -Command \"[Environment]::SetEnvironmentVariable\\(''Path'', \\([Environment]::GetEnvironmentVariable\\(''Path'',''User''\\) + '';C:\\\\Users\\\\v-haoguoliang\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python313\\\\;C:\\\\Users\\\\v-haoguoliang\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python313\\\\Scripts\\\\''\\), ''User''\\); Write-Host ''Done''\")",
+      "Bash(cmd.exe //c powershell.exe -ExecutionPolicy Bypass -NoProfile -Command \"\n$userPath = [Environment]::GetEnvironmentVariable\\(''Path'', ''User''\\)\n$newPath = ''C:\\\\Users\\\\v-haoguoliang\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python313\\\\;C:\\\\Users\\\\v-haoguoliang\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python313\\\\Scripts\\\\''\nif \\($userPath -notmatch [regex]::Escape\\($newPath\\)\\) {\n    [Environment]::SetEnvironmentVariable\\(''Path'', $newPath + '';'' + $userPath, ''User''\\)\n    Write-Host ''Python added to PATH'' -ForegroundColor Green\n} else {\n    Write-Host ''Already in PATH'' -ForegroundColor Cyan\n}\n\")",
+      "Bash(pwsh -File \"C:\\\\Users\\\\v-haoguoliang\\\\Desktop\\\\新建文件夹\\\\add_python_to_path.ps1\")",
+      "Bash(cmd /c \"refreshenv 2>nul || set PATH=C:\\\\Users\\\\v-haoguoliang\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python313\\\\;C:\\\\Users\\\\v-haoguoliang\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python313\\\\Scripts\\\\;%PATH% && python --version\")"
+    ]
+  }
+}

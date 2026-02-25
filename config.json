@@ -1,0 +1,13 @@
+{
+  "appName": "My Application",
+  "version": "1.0.0",
+  "settings": {
+    "debug": true,
+    "maxConnections": 100,
+    "timeout": 30
+  },
+  "features": {
+    "enableNotifications": true,
+    "enableDarkMode": false
+  }
+}

@@ -1,0 +1,14 @@
+请选择要创建的文件类型（回复数字）：
+
+1. Python 脚本 (.py)
+2. JavaScript 文件 (.js)
+3. Markdown 文档 (.md)
+4. 纯文本文件 (.txt)
+5. JSON 配置 (.json)
+6. HTML 网页 (.html)
+7. CSS 样式 (.css)
+8. PowerShell 脚本 (.ps1)
+9. 批处理文件 (.bat)
+10. YAML 配置 (.yml)
+
+请回复数字 1-10
