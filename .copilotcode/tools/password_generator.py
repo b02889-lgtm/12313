@@ -29,3 +29,37 @@ def generate_password(length=16, use_uppercase=True, use_lowercase=True, use_dig
         raise ValueError("至少需要选择一种字符类型")
     
     return ''.join(random.choice(chars) for _ in range(length))
+
+
+if __name__ == '__main__':
+    print("=" * 50)
+    print("密码生成器演示")
+    print("=" * 50)
+
+    # 1. 默认配置（16位，包含所有字符类型）
+    pwd1 = generate_password()
+    print(f"\n1. 默认配置（16位，含大小写+数字+符号）:")
+    print(f"   {pwd1}")
+
+    # 2. 纯数字密码（6位PIN码）
+    pwd2 = generate_password(length=6, use_uppercase=False, use_lowercase=False, use_digits=True, use_symbols=False)
+    print(f"\n2. 6位 PIN 码（纯数字）:")
+    print(f"   {pwd2}")
+
+    # 3. 仅字母+数字（12位，无特殊符号）
+    pwd3 = generate_password(length=12, use_symbols=False)
+    print(f"\n3. 12位字母+数字（无特殊符号）:")
+    print(f"   {pwd3}")
+
+    # 4. 高强度密码（32位）
+    pwd4 = generate_password(length=32)
+    print(f"\n4. 32位高强度密码:")
+    print(f"   {pwd4}")
+
+    # 5. 批量生成5个密码
+    print(f"\n5. 批量生成5个20位密码:")
+    for i in range(5):
+        print(f"   [{i+1}] {generate_password(length=20)}")
+
+    print("\n" + "=" * 50)
+    print("密码生成完成！")

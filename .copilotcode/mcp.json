@@ -2,7 +2,9 @@
   "mcpServers": {
     "figma-dev-mode": {
       "type": "sse",
-      "url": "http://127.0.0.1:8080/sse"
+      "url": "http://127.0.0.1:8080/sse",
+      "disabled": true,
+      "alwaysAllow": []
     },
     "apify": {
       "command": "npx",

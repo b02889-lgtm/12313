@@ -34,4 +34,3 @@ try:
     print("\n请重启Copilot Code Pro应用以应用更改。")
 except Exception as e:
     print(f"更新配置文件失败: {e}")
-    print("\n请检查配置文件路径和权限。")
