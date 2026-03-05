@@ -24,7 +24,7 @@ async def fetch_page_content(url: str):
             content = await page.content()
             
             # 获取页面文本内容（去除HTML标签）
-            text_content = await page.evaluate('() => document.body.innerText')
+            text_content = await page.evaluate('() => document.body.innerText') 
             
             # 关闭浏览器
             await browser.close()
@@ -52,3 +52,4 @@ if __name__ == "__main__":
     print(result['text'][:500])
     print(f"\n=== HTML内容（前500字符）===")
     print(result['html'][:500])
+

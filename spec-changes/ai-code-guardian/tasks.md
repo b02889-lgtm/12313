@@ -59,3 +59,4 @@
 - [ ] **T6.2 综合报告生成**：实现 `core.reporter`，将四个模块的独立结果汇总为一个美观的终端仪表盘 (Dashboard)。
 - [ ] **T6.3 Pre-commit Hook 安装器**：实现 `guardian install-hook`，自动在当前 Git 仓库的 `.git/hooks/pre-commit` 中写入触发脚本。
 - [ ] **T6.4 文档编写**：更新 `README.md`，提供快速开始指南、配置项说明和所有命令的帮助文档。
+
