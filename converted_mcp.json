@@ -1,0 +1,25 @@
+{
+  "mcpServers": {
+    "qihoo-code-security": {
+      "command": "node",
+      "args": ["-e", "console.error('Copilot Code uses stdio for MCP, not SSE direct URLs.')"],
+      "disabled": true,
+      "description": "Copilot Code natively supports stdio commands. SSE URLs like http://code-security.mcp.qihoo.net:8888/sse are not directly supported via config yet."
+    },
+    "editor-docs": {
+      "command": "node",
+      "args": ["-e", "console.error('SSE not directly supported.')"],
+      "disabled": true
+    },
+    "antvis-chart": {
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "@antv/mcp-server-chart"]
+    },
+    "text-translation": {
+      "command": "curl",
+      "args": ["-X", "POST", "http://mcp.zyuncs.qihoo.net/69123654d5mlubnu/328919aq3qrwbg71", "-H", "Authorization: Bearer 9381dab553b69f21490713fd8b87488f"],
+      "disabled": true,
+      "description": "HTTP transport is not standard stdio. Needs a wrapper script."
+    }
+  }
+}

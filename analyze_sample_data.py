@@ -1,125 +1,158 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-分析 sample_data.csv 并生成报告
+数据分析脚本 - 基于 sample_data.csv
+按照数据分析工作流执行完整分析
 """
 
+import sys
+import io
 import pandas as pd
 import numpy as np
-import json
-from datetime import datetime
 
-def analyze_sample_data():
-    """分析示例数据并生成报告"""
-    print("="*60)
-    print("数据分析报告 - sample_data.csv")
-    print("="*60)
-    
-    # 读取数据
-    df = pd.read_csv('sample_data.csv', encoding='utf-8')
-    print(f"✓ 成功加载数据: sample_data.csv")
-    print(f"  数据形状: {df.shape[0]} 行 × {df.shape[1]} 列")
-    
-    # 创建报告字典
-    report = {
-        "报告生成时间": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        "数据基本信息": {
-            "文件名": "sample_data.csv",
-            "行数": int(df.shape[0]),
-            "列数": int(df.shape[1]),
-            "列名": list(df.columns)
-        },
-        "数据类型": {},
-        "数值统计": {},
-        "分类统计": {},
-        "数据质量": {}
-    }
-    
-    # 数据类型
-    for col, dtype in df.dtypes.items():
-        report["数据类型"][col] = str(dtype)
-    
-    # 数值型数据统计
-    numeric_cols = df.select_dtypes(include=[np.number]).columns
-    if len(numeric_cols) > 0:
-        for col in numeric_cols:
-            report["数值统计"][col] = {
-                "计数": int(df[col].count()),
-                "平均值": float(df[col].mean()),
-                "标准差": float(df[col].std()),
-                "最小值": float(df[col].min()),
-                "最大值": float(df[col].max()),
-                "中位数": float(df[col].median())
-            }
-    
-    # 分类数据统计
-    categorical_cols = df.select_dtypes(include=['object']).columns
-    if len(categorical_cols) > 0:
-        for col in categorical_cols:
-            value_counts = df[col].value_counts()
-            report["分类统计"][col] = {
-                "唯一值数量": int(value_counts.count()),
-                "前3个值分布": {str(k): int(v) for k, v in value_counts.head(3).items()}
-            }
-    
-    # 数据质量检查
-    missing = df.isnull().sum()
-    missing_percent = (missing / len(df)) * 100
-    report["数据质量"]["缺失值"] = {col: int(count) for col, count in missing.items() if count > 0}
-    report["数据质量"]["总行数"] = int(len(df))
-    report["数据质量"]["完整行数"] = int(len(df.dropna()))
-    
-    # 部门统计
-    if 'department' in df.columns:
-        dept_stats = df['department'].value_counts()
-        report["部门统计"] = {str(dept): int(count) for dept, count in dept_stats.items()}
-    
-    # 年龄和分数分析
-    if 'age' in df.columns and 'score' in df.columns:
-        report["年龄分数分析"] = {
-            "平均年龄": float(df['age'].mean()),
-            "平均分数": float(df['score'].mean()),
-            "年龄标准差": float(df['age'].std()),
-            "分数标准差": float(df['score'].std()),
-            "最高分": {
-                "分数": float(df['score'].max()),
-                "姓名": str(df.loc[df['score'].idxmax(), 'name']) if 'name' in df.columns else "未知"
-            },
-            "最低分": {
-                "分数": float(df['score'].min()),
-                "姓名": str(df.loc[df['score'].idxmin(), 'name']) if 'name' in df.columns else "未知"
-            }
-        }
-    
-    # 保存报告为JSON
-    with open('data_analysis_report.json', 'w', encoding='utf-8') as f:
-        json.dump(report, f, ensure_ascii=False, indent=2, default=str)
-    
-    print("✓ 数据分析完成")
-    print("✓ 报告已保存为: data_analysis_report.json")
-    
-    # 打印报告摘要
-    print("\n" + "-"*60)
-    print("报告摘要")
-    print("-"*60)
-    print(f"数据集大小: {report['数据基本信息']['行数']} 行 × {report['数据基本信息']['列数']} 列")
-    print(f"列名: {', '.join(report['数据基本信息']['列名'])}")
-    
-    if '年龄分数分析' in report:
-        print(f"平均年龄: {report['年龄分数分析']['平均年龄']:.1f} 岁")
-        print(f"平均分数: {report['年龄分数分析']['平均分数']:.1f} 分")
-        print(f"最高分: {report['年龄分数分析']['最高分']['分数']} 分 ({report['年龄分数分析']['最高分']['姓名']})")
-        print(f"最低分: {report['年龄分数分析']['最低分']['分数']} 分 ({report['年龄分数分析']['最低分']['姓名']})")
-    
-    if '部门统计' in report:
-        print("部门分布:")
-        for dept, count in report['部门统计'].items():
-            print(f"  {dept}: {count} 人")
-    
-    missing_total = sum(report['数据质量']['缺失值'].values())
-    print(f"数据质量: 缺失值 {missing_total} 个")
-    
-    return report
+# 修复 Windows 终端编码问题
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
-if __name__ == "__main__":
-    analyze_sample_data()
+print("=" * 60)
+print("         数据分析报告 - sample_data.csv")
+print("=" * 60)
+
+# ===== 步骤1：数据加载 =====
+print("\n【步骤1】数据加载")
+print("-" * 40)
+df = pd.read_csv('sample_data.csv')
+print(f"[OK] 数据加载成功，共 {len(df)} 行，{len(df.columns)} 列")
+
+# ===== 步骤2：数据探索 =====
+print("\n【步骤2】数据探索")
+print("-" * 40)
+
+print("\n>>> 数据预览（前5行）：")
+print(df.to_string(index=False))
+
+print("\n>>> 数据结构信息：")
+print(f"  列名：{list(df.columns)}")
+for col in df.columns:
+    print(f"  - {col}: 类型={df[col].dtype}, 非空={df[col].notna().sum()}/{len(df)}")
+
+print("\n>>> 缺失值检查：")
+missing = df.isnull().sum()
+if missing.sum() == 0:
+    print("  [OK] 无缺失值")
+else:
+    print(f"  [!] 存在缺失值：\n{missing[missing > 0]}")
+
+print("\n>>> 重复行检查：")
+dup_count = df.duplicated().sum()
+if dup_count == 0:
+    print("  [OK] 无重复行")
+else:
+    print(f"  [!] 发现 {dup_count} 行重复数据")
+
+# ===== 步骤3：数据清洗 =====
+print("\n【步骤3】数据清洗")
+print("-" * 40)
+df_clean = df.copy()
+df_clean = df_clean.drop_duplicates()
+df_clean = df_clean.dropna()
+print(f"[OK] 清洗完成，剩余有效数据：{len(df_clean)} 行")
+
+# ===== 步骤4：统计分析 =====
+print("\n【步骤4】统计分析")
+print("-" * 40)
+
+# 数值列统计
+numeric_cols = df_clean.select_dtypes(include=[np.number]).columns.tolist()
+numeric_cols = [c for c in numeric_cols if c != 'id']  # 排除id列
+
+print(f"\n>>> 数值列（{numeric_cols}）统计摘要：")
+stats = df_clean[numeric_cols].describe()
+print(stats.to_string())
+
+# age 分析
+print(f"\n>>> 年龄分析：")
+print(f"  平均年龄：{df_clean['age'].mean():.1f} 岁")
+print(f"  最小年龄：{df_clean['age'].min()} 岁  最大年龄：{df_clean['age'].max()} 岁")
+print(f"  年龄中位数：{df_clean['age'].median():.1f} 岁")
+print(f"  年龄标准差：{df_clean['age'].std():.2f}")
+
+# score 分析
+print(f"\n>>> 成绩分析：")
+print(f"  平均分：{df_clean['score'].mean():.2f}")
+print(f"  最高分：{df_clean['score'].max()}  最低分：{df_clean['score'].min()}")
+print(f"  中位数：{df_clean['score'].median():.2f}")
+print(f"  标准差：{df_clean['score'].std():.2f}")
+
+# 找出最高分和最低分
+top = df_clean.loc[df_clean['score'].idxmax()]
+bottom = df_clean.loc[df_clean['score'].idxmin()]
+print(f"  最高分人员：{top['name']}（{top['score']}分，{top['department']}）")
+print(f"  最低分人员：{bottom['name']}（{bottom['score']}分，{bottom['department']}）")
+
+# 分组分析（按部门）
+print(f"\n>>> 按部门分组统计：")
+dept_stats = df_clean.groupby('department').agg(
+    人数=('id', 'count'),
+    平均年龄=('age', 'mean'),
+    平均成绩=('score', 'mean'),
+    最高成绩=('score', 'max'),
+    最低成绩=('score', 'min')
+).round(2)
+print(dept_stats.to_string())
+
+# 相关性分析
+print(f"\n>>> 相关性分析（age vs score）：")
+corr = df_clean[['age', 'score']].corr().loc['age', 'score']
+print(f"  年龄与成绩的相关系数：{corr:.4f}")
+if abs(corr) < 0.3:
+    level = "弱相关"
+elif abs(corr) < 0.7:
+    level = "中等相关"
+else:
+    level = "强相关"
+direction = "正" if corr > 0 else "负"
+print(f"  结论：年龄与成绩呈{direction}{level}")
+
+# ===== 步骤5：成绩分级 =====
+print(f"\n【步骤5】成绩分级分析")
+print("-" * 40)
+
+def grade(score):
+    if score >= 90:
+        return 'A(优秀)'
+    elif score >= 80:
+        return 'B(良好)'
+    elif score >= 70:
+        return 'C(中等)'
+    else:
+        return 'D(待提升)'
+
+df_clean = df_clean.copy()
+df_clean['grade'] = df_clean['score'].apply(grade)
+print("\n  姓名    成绩   等级       部门")
+print("  " + "-" * 36)
+for _, row in df_clean.iterrows():
+    print(f"  {row['name']:4s}  {row['score']:5.1f}  {row['grade']:8s}  {row['department']}")
+
+print(f"\n>>> 各等级人数统计：")
+grade_counts = df_clean['grade'].value_counts().sort_index()
+for g, cnt in grade_counts.items():
+    print(f"  {g}：{cnt} 人")
+
+# ===== 步骤6：可视化建议 =====
+print(f"\n【步骤6】可视化建议")
+print("-" * 40)
+print("  建议图表类型：")
+print("  1. 柱状图：各部门平均成绩对比")
+print("  2. 饼图：各部门人数占比")
+print("  3. 散点图：年龄与成绩关系")
+print("  4. 箱线图：各部门成绩分布")
+
+# ===== 导出结果 =====
+print(f"\n【步骤7】导出结果")
+print("-" * 40)
+df_clean.to_csv('analysis_result.csv', index=False, encoding='utf-8-sig')
+print("[OK] 分析结果已保存至 analysis_result.csv")
+
+print("\n" + "=" * 60)
+print("                   分析完成！")
+print("=" * 60)
