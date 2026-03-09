@@ -1,19 +1,27 @@
 # 自定义工具 MCP 服务器
 
-这是一个实验性的自定义工具调用能力演示，展示如何通过编写 Python 代码实现自定义 MCP 工具。
+一个沙箱化的 Python 代码片段执行器，通过 MCP 协议暴露为可调用工具。支持在对话中直接运行 Python 代码，适合快速验证算法、数据转换、生成测试数据等场景。
 
 ## 提供的工具
 
-| 工具名 | 功能说明 |
-|--------|----------|
-| `text_transform` | 文本转换（大小写、反转、去空格等）|
-| `hash_generator` | 生成文本哈希（MD5、SHA1、SHA256 等）|
-| `base64_codec` | Base64 编码与解码 |
-| `word_counter` | 统计文本信息（字数、字符数等）|
-| `json_formatter` | JSON 格式化或压缩 |
-| `regex_matcher` | 正则表达式匹配与替换 |
-| `timestamp_converter` | Unix 时间戳与日期时间互转 |
-| `calculator` | 数学表达式计算器 |
+| 工具名 | 功能说明 | 必需参数 | 可选参数 |
+|--------|----------|----------|----------|
+| `run_python_snippet` | 在沙箱中执行 Python 代码片段，返回 stdout 和返回值 | `code` (string) | `timeout` (integer, 默认 10 秒) |
+
+## 🔒 安全机制
+
+所有代码在执行前会经过 AST 静态扫描，以下内容会被拦截：
+
+**禁止的内建函数：**
+`open`、`exec`、`compile`、`eval`、`breakpoint`、`input`
+
+**禁止导入的模块：**
+`os`、`subprocess`、`shutil`、`socket`、`urllib`、`requests`、`httpx`、`ftplib`、`smtplib`、`imaplib`、`poplib`、`ctypes`、`cffi`
+
+**预注入的安全标准库（可直接使用）：**
+`math`、`random`、`json`、`re`、`datetime`、`collections`、`itertools`、`functools`、`string`、`hashlib`、`base64`
+
+> ⚠️ 以上列表以 `server.py` 中的 `BLOCKED_NAMES`、`BLOCKED_MODULES` 和 `safe_globals` 为准。
 
 ## 安装与运行
 
@@ -46,48 +54,87 @@ python server.py
 }
 ```
 
-## 工具使用示例
+## 使用示例
 
-### 文本转换
-```
-工具: text_transform
-输入: { "text": "hello world", "operation": "uppercase" }
-输出: HELLO WORLD
-```
+### 示例 1：数学计算
 
-### 哈希生成
-```
-工具: hash_generator
-输入: { "text": "hello", "algorithm": "sha256" }
-输出: 2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824
+```json
+{
+  "code": "import math\nresult = math.factorial(10)\nprint(f'10! = {result}')"
+}
 ```
 
-### Base64 编码
+输出：
 ```
-工具: base64_codec
-输入: { "text": "你好，世界！", "operation": "encode" }
-输出: 5L2g5aW977yM5LiW55WM77yB
+10! = 3628800
 ```
 
-### JSON 格式化
-```
-工具: json_formatter
-输入: { "json_text": "{\"name\":\"test\"}", "operation": "format" }
-输出: 格式化后的 JSON 内容
+### 示例 2：数据处理
+
+```json
+{
+  "code": "data = [3, 1, 4, 1, 5, 9, 2, 6]\nsorted_data = sorted(data)\nprint(f'排序后: {sorted_data}')\nprint(f'平均值: {sum(data)/len(data):.2f}')"
+}
 ```
 
-### 时间戳转换
+输出：
 ```
-工具: timestamp_converter
-输入: { "operation": "current" }
-输出: 当前时间和 Unix 时间戳
+排序后: [1, 1, 2, 3, 4, 5, 6, 9]
+平均值: 3.88
 ```
 
-### 数学计算
+### 示例 3：JSON 处理
+
+```json
+{
+  "code": "import json\ndata = {'name': '测试', 'values': [1, 2, 3]}\nprint(json.dumps(data, ensure_ascii=False, indent=2))"
+}
 ```
-工具: calculator
-输入: { "expression": "2 + 3 * 4" }
-输出: 14
+
+输出：
+```json
+{
+  "name": "测试",
+  "values": [1, 2, 3]
+}
+```
+
+### 示例 4：带超时的长时间计算
+
+```json
+{
+  "code": "total = sum(i**2 for i in range(1000000))\nprint(f'前 100 万个平方数之和: {total}')",
+  "timeout": 30
+}
+```
+
+## 技术架构
+
+```
+用户请求（code + timeout）
+    │
+    ▼
+┌──────────────────────┐
+│  AST 静态安全扫描     │ ← 检查 import 和危险函数调用
+│  (禁止模块/函数黑名单) │
+└──────────┬───────────┘
+           │ 通过
+           ▼
+┌──────────────────────┐
+│  构建沙箱命名空间     │ ← 安全内建 + 11 个标准库
+│  (safe_globals)       │
+└──────────┬───────────┘
+           │
+           ▼
+┌──────────────────────┐
+│  线程池异步执行       │ ← asyncio.wait_for(timeout)
+│  (捕获 stdout/stderr) │
+└──────────┬───────────┘
+           │
+           ▼
+┌──────────────────────┐
+│  格式化输出           │ ← 代码 + stdout + 返回值 / 错误
+└──────────────────────┘
 ```
 
 ## 如何添加新工具
@@ -125,34 +172,4 @@ async def handle_my_new_tool(args: dict) -> list[TextContent]:
     # 处理逻辑
     result = f"处理结果: {param1}"
     return [TextContent(type="text", text=result)]
-```
-
-## 技术架构
-
-本项目使用以下技术：
-
-- **Python** - 服务器端语言
-- **MCP SDK** - Model Context Protocol SDK，提供 MCP 协议支持
-- **asyncio** - Python 异步编程框架
-- **标准库** - hashlib、base64、re、json、datetime 等
-
-## 自定义工具开发流程
-
-```
-用户请求
-    │
-    ▼
-MCP 客户端（Claude）
-    │ 发送工具调用请求
-    ▼
-MCP 服务器（server.py）
-    │ call_tool() 分发
-    ▼
-具体工具处理函数
-    │ 执行业务逻辑
-    ▼
-返回 TextContent 结果
-    │
-    ▼
-MCP 客户端展示结果
 ```
