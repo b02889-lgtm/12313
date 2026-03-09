@@ -9,7 +9,7 @@
 | [ai-code-guardian](./ai-code-guardian/) | AI 驱动的代码守护工具（代码审查、测试生成、i18n 检查） | Python, AST, LLM | 🧪 📦 |
 | [weather-mcp-server](./weather-mcp-server/) | 天气查询 MCP 服务 | Python, MCP | 📖 📦 |
 | [custom-tools-mcp](./custom-tools-mcp/) | 自定义工具 MCP 服务 | Python, MCP | 📖 📦 |
-| [demo-resources-mcp](./demo-resources-mcp/) | MCP 资源演示服务 | Node.js, MCP | 📦 |
+| [demo-resources-mcp](./demo-resources-mcp/) | MCP 资源演示服务 | Node.js, MCP | 📖 📦 |
 | [mcp-streaming-server](./mcp-streaming-server/) | 流式 MCP 服务 | Python, MCP | 📖 📦 |
 | [fe_fusion_device_repro](./fe_fusion_device_repro/) | 前端融合设备策略详情页 | Vue.js, Vitest | 🧪 📦 |
 
