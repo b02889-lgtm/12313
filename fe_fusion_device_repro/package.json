@@ -1,0 +1,20 @@
+{
+  "name": "fe-fusion-device-repro",
+  "version": "1.0.0",
+  "description": "复现 strategyDetail 单元测试报错",
+  "private": true,
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "vue": "^3.4.0",
+    "element-plus": "^2.9.0"
+  },
+  "devDependencies": {
+    "@vue/test-utils": "^2.4.0",
+    "@vitejs/plugin-vue": "^5.0.0",
+    "vitest": "^3.0.0",
+    "jsdom": "^25.0.0"
+  }
+}

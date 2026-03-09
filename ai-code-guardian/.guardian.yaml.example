@@ -1,0 +1,38 @@
+# AI Code Guardian 配置文件
+# 将此文件复制为 .guardian.yaml 并根据需要修改
+
+guardian:
+  # 全局开关
+  enabled: true
+  llm_provider: "claude"          # claude / openai
+  llm_model: "claude-sonnet-4-20250514"
+
+  # 模块开关与配置
+  test_gen:
+    enabled: true
+    output_dir: "tests/auto_generated"
+    mutation_testing: false         # 变异测试默认关闭（耗时）
+    max_tests_per_function: 5
+
+  api_diff:
+    enabled: true
+    strict_mode: true              # true = BREAKING 时阻断提交
+    ignore_patterns:               # 忽略特定函数的 API 检查
+      - "_internal_*"
+      - "test_*"
+
+  perf_guard:
+    enabled: true
+    threshold_warning: 0.10        # 10% 性能退化触发警告
+    threshold_fail: 0.30           # 30% 性能退化阻断提交
+    benchmark_timeout: 30          # 单个 benchmark 最大运行秒数
+
+  i18n_guard:
+    enabled: true
+    target_langs: ["en", "ja"]
+    key_style: "namespace"         # namespace (文件路径式) / flat (扁平式)
+    output_format: "json"          # json / yaml
+    locale_dir: "locales/"
+    skip_patterns:                 # 跳过的字符串模式
+      - "logger\\."
+      - "# "

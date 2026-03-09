@@ -6,31 +6,31 @@
 
 **目标**：搭建 CLI 框架，实现读取 Git 暂存区和 AST 解析的基础能力。
 
-- [ ] **T1.1 初始化项目**：创建项目目录结构，编写 `pyproject.toml`，配置 `click`、`rich`、`pyyaml` 依赖。
-- [ ] **T1.2 CLI 框架**：实现 `guardian.cli`，注册基础子命令（`check`, `test-gen`, `api-diff`, `perf`, `i18n`）。
-- [ ] **T1.3 配置管理**：实现 `core.config`，支持读取 `.guardian.yaml` 并提供默认配置回退。
-- [ ] **T1.4 Git 适配器**：实现 `core.git_adapter.GitAdapter`，能够可靠获取 staged 状态的 Python 文件名及其内容（HEAD 版本和 Staged 版本）。
-- [ ] **T1.5 AST 分析器 (基础)**：实现 `core.ast_analyzer.ASTAnalyzer`，能从源码字符串中提取包含函数名、起止行号的 `FunctionInfo` 对象。
+- [x] **T1.1 初始化项目**：创建项目目录结构，编写 `pyproject.toml`，配置 `click`、`rich`、`pyyaml` 依赖。
+- [x] **T1.2 CLI 框架**：实现 `guardian.cli`，注册基础子命令（`check`, `test-gen`, `api-diff`, `perf`, `i18n`）。
+- [x] **T1.3 配置管理**：实现 `core.config`，支持读取 `.guardian.yaml` 并提供默认配置回退。
+- [x] **T1.4 Git 适配器**：实现 `core.git_adapter.GitAdapter`，能够可靠获取 staged 状态的 Python 文件名及其内容（HEAD 版本和 Staged 版本）。
+- [x] **T1.5 AST 分析器 (基础)**：实现 `core.ast_analyzer.ASTAnalyzer`，能从源码字符串中提取包含函数名、起止行号的 `FunctionInfo` 对象。
 
 ## 阶段 2：API 破坏性检测模块 (API Diff)
 *此模块纯静态分析，不依赖 LLM，是最快能产生价值的模块。*
 
 **目标**：实现前后版本函数签名的对比与破坏性分级。
 
-- [ ] **T2.1 AST 签名提取**：增强 AST 分析器，精确提取函数的参数列表（名称、类型注解、默认值）和返回类型注解。
-- [ ] **T2.2 对比引擎**：实现 `modules.api_diff` 中的对比逻辑，比较旧版本(HEAD)和新版本(Staged)的公开 API 签名。
-- [ ] **T2.3 变更分级**：实现规则引擎，将变更分类为 SAFE（新增方法/可选参数）、WARNING（重命名参数）和 BREAKING（删除参数/改返回值）。
-- [ ] **T2.4 报告输出**：集成 `rich` 库，在终端输出彩色的 API 变更报告。
+- [x] **T2.1 AST 签名提取**：增强 AST 分析器，精确提取函数的参数列表（名称、类型注解、默认值）和返回类型注解。
+- [x] **T2.2 对比引擎**：实现 `modules.api_diff` 中的对比逻辑，比较旧版本(HEAD)和新版本(Staged)的公开 API 签名。
+- [x] **T2.3 变更分级**：实现规则引擎，将变更分类为 SAFE（新增方法/可选参数）、WARNING（重命名参数）和 BREAKING（删除参数/改返回值）。
+- [x] **T2.4 报告输出**：集成 `rich` 库，在终端输出彩色的 API 变更报告。
 
 ## 阶段 3：国际化硬编码审查模块 (I18n Guard)
 *混合模式：先做静态拦截，后加 LLM 翻译。*
 
 **目标**：拦截代码中的魔法中文，并利用 LLM 提供翻译和替换建议。
 
-- [ ] **T3.1 字符串节点提取**：在 AST 分析器中添加提取 `ast.Str` 和 `ast.JoinedStr`（f-string）的功能，并过滤掉 docstring 和注释。
-- [ ] **T3.2 LLM 客户端基建**：实现 `core.llm_client.LLMClient`，封装对 Claude API 的调用（处理鉴权、重试、错误兜底）。
-- [ ] **T3.3 翻译 Prompt 设计**：编写 `templates/i18n_translate_prompt.md`，要求 LLM 返回 JSON 格式的翻译结果。
-- [ ] **T3.4 审查与交互**：实现 `modules.i18n_guard`。当发现中文字符串时，提取前后 3 行代码作为上下文发送给 LLM，并在终端提供翻译选项。
+- [x] **T3.1 字符串节点提取**：在 AST 分析器中添加提取 `ast.Str` 和 `ast.JoinedStr`（f-string）的功能，并过滤掉 docstring 和注释。
+- [x] **T3.2 LLM 客户端基建**：实现 `core.llm_client.LLMClient`，封装对 Claude API 的调用（处理鉴权、重试、错误兜底）。
+- [x] **T3.3 翻译 Prompt 设计**：编写 `templates/i18n_translate_prompt.md`，要求 LLM 返回 JSON 格式的翻译结果。
+- [x] **T3.4 审查与交互**：实现 `modules.i18n_guard`。当发现中文字符串时，提取前后 3 行代码作为上下文发送给 LLM，并在终端提供翻译选项。
 
 ## 阶段 4：AI 测试生成模块 (TestGen)
 
